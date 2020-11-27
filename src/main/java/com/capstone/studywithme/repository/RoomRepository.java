@@ -26,4 +26,11 @@ public class RoomRepository {
                 .setParameter("name",name)
                 .getResultList();
     }
+
+    public Room findOneByName(String name){
+        return em.createQuery("select m from Room m where m.name = :name", Room.class)
+                .setParameter("name",name)
+                .getSingleResult();
+    }
+
 }

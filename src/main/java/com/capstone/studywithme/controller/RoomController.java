@@ -1,12 +1,10 @@
 package com.capstone.studywithme.controller;
 
-import com.capstone.studywithme.domain.Member;
 import com.capstone.studywithme.domain.Room;
 import com.capstone.studywithme.service.RoomService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -43,13 +41,20 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public Result checkRoom(){
+    public Result checkRooms(){
         List<Room> findRooms= roomService.findRooms();
         List<RoomController.RoomDto> collect = findRooms.stream()
                 .map(m -> new RoomController.RoomDto(m.getName()))
                 .collect(Collectors.toList());
         return new Result(collect.size(),collect);
     }
+
+    @GetMapping("/rooms/{roomName}")
+    public SearchRoomReponse checkRoom(@PathVariable("roomName") SearchRoomRequest roomName){
+        Room findRoom = roomService.findByName(roomName.getName());
+        return new SearchRoomReponse(findRoom.getId(), findRoom.getIs_private());
+    }
+
 
     @PutMapping("/rooms/{id}")
     public UpdateRoomResponse updateRoom(
@@ -107,4 +112,16 @@ public class RoomController {
         private Boolean is_private;
     }
 
+    @Data
+    @AllArgsConstructor
+    static class SearchRoomRequest{
+        private String name;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class SearchRoomReponse{
+        private Long id;
+        private Boolean is_private;
+    }
 }

@@ -46,6 +46,8 @@ public class RoomService {
 
     public Room findOne(Long roomId){return roomRepository.findOne(roomId);}
 
+    public Room findByName(String roomName){return roomRepository.findOneByName(roomName);}
+
     @Transactional
     public void update(Long id, String name, String passcode, Boolean is_private){
         Room room = roomRepository.findOne(id);
